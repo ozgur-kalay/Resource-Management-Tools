@@ -1,0 +1,77 @@
+#include "controls/pack_file_name_controls.hpp"
+#include "packing/pack_manager.hpp"
+
+PackFileNameControls::PackFileNameControls(wxWindow* parent) : wxPanel(parent, wxID_ANY)
+{
+    _i_init_controls();
+    _i_connect_internal_events();
+    _i_connect_external_events();
+}
+
+void PackFileNameControls::_i_init_controls()
+{
+    m_pack_file_name_str = "resources";
+    m_pack_file_extention_str = "pack";
+
+    m_pack_file_name_label = new wxStaticText(this, wxID_ANY, "Pack file name");
+    m_file_extention_label = new wxStaticText(this, wxID_ANY, "Extension");
+
+    m_file_name_txt_ctrl = new wxTextCtrl(this, wxID_ANY, m_pack_file_name_str);
+
+    m_extension_dot_label = new wxStaticText(this, wxID_ANY, ".");
+    m_file_extention_txt_ctrl = new wxTextCtrl(this, wxID_ANY, m_pack_file_extention_str);
+
+    _i_update_pack_data();
+
+    int left_padding = 2;
+    // File name sizers
+    wxBoxSizer* v_file_name_sizer = new wxBoxSizer(wxVERTICAL);
+    v_file_name_sizer->Add(m_pack_file_name_label, 0, wxLEFT, left_padding);
+    v_file_name_sizer->Add(m_file_name_txt_ctrl);
+
+    // Extension Sizers
+    wxBoxSizer* v_extention_sizer = new wxBoxSizer(wxVERTICAL);
+    v_extention_sizer->Add(m_file_extention_label, 0, wxLEFT, left_padding);
+    v_extention_sizer->Add(m_file_extention_txt_ctrl);
+    
+    
+
+    // Main Sizer
+    wxBoxSizer* main_sizer = new wxBoxSizer(wxHORIZONTAL);
+    main_sizer->Add(v_file_name_sizer);
+    main_sizer->Add(m_extension_dot_label, 0, wxALIGN_BOTTOM | wxBOTTOM, 4);
+    main_sizer->Add(v_extention_sizer);
+    
+    SetSizer(main_sizer);
+}
+
+void PackFileNameControls::_i_connect_internal_events()
+{
+    m_file_name_txt_ctrl->Bind(wxEVT_TEXT, &PackFileNameControls::_on_file_name_entered, this);
+    m_file_extention_txt_ctrl->Bind(wxEVT_TEXT, &PackFileNameControls::_on_file_extention_entered, this);
+}
+
+void PackFileNameControls::_i_connect_external_events()
+{
+
+}
+
+void PackFileNameControls::_i_update_pack_data()
+{
+    PackManager::GetInstance().AddPackFileName(m_pack_file_name_str + '.' + m_pack_file_extention_str);
+
+    wxString log = wxString::Format("Pack file name updated: file name = %s", PackManager::GetInstance().GetPackData().pack_file_name);
+    wxLogDebug(log);
+}
+
+void PackFileNameControls::_on_file_name_entered(wxCommandEvent& event)
+{
+    m_pack_file_name_str = event.GetString();
+    _i_update_pack_data();
+}
+
+void PackFileNameControls::_on_file_extention_entered(wxCommandEvent& event)
+{
+    m_pack_file_extention_str = event.GetString();
+    _i_update_pack_data();
+}
