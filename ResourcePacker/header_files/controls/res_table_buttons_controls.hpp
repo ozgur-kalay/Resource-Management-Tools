@@ -14,7 +14,7 @@ class ResTableButtonsControls : public wxPanel, public IControlInitializer
         ResTableButtonsControls(wxWindow* parent);
 
     private:
-        FileAddedEvent file_added_event;
+        FileAddedEvent m_file_added_event;
 
         wxButton* m_add_dir_button;
         wxButton* m_add_file_button;

@@ -1,7 +1,6 @@
 #include "controls/res_table_controls.hpp"
 #include "config.hpp"
 #include "packing/pack_manager.hpp"
-#include "controls/custom_events.hpp"
 
 ResTableListControls::ResTableListControls(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 {
@@ -82,13 +81,7 @@ void ResTableListControls::_i_connect_internal_events()
 
 void ResTableListControls::_i_connect_external_events()
 {
-    EventSystem::EventManager::get_instance().subscribe<FileAddedEvent>(
-        [](std::filesystem::path path)
-        {
-            wxString log = wxString::Format("FileAddedEvent recieved: event args = %s", path.string());
-            wxLogDebug(log);
-        }
-    );
+    m_file_added_subscription = EventSystem::EventManager::get_instance().subscribe<FileAddedEvent>(this, &ResTableListControls::_on_file_added_event);
 }
 
         // int idx = null_idx;
@@ -102,7 +95,8 @@ void ResTableListControls::_i_connect_external_events()
 
 void ResTableListControls::_on_file_added_event(std::filesystem::path path)
 {
-    wxLogDebug("_on_file_added_event recieved");
+    wxString log = wxString::Format("FileAddedEvent recieved: event args = %s", path.string());
+    wxLogDebug(log);
 }
 
 void ResTableListControls::AddFileToRow(std::filesystem::path file_path)

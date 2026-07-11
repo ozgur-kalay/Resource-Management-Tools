@@ -8,6 +8,8 @@
 #include <vector>
 #include "null_idx.hpp"
 
+#include "controls/custom_events.hpp"
+
 class ResTableListControls : public wxPanel, public IControlInitializer
 {
     // RESOURCE_NAME, ACCESS_PATH, IN_PATH, OUT_PATH, IN_SIZE, OUT_SIZE
@@ -72,7 +74,9 @@ class ResTableListControls : public wxPanel, public IControlInitializer
         void _i_connect_internal_events() override;
         void _i_connect_external_events() override;
 
-        // Events Handling
+    // Events Handling
+    private:
+        EventSystem::Subscription m_file_added_subscription;
         void _on_file_added_event(std::filesystem::path path);
 
 };

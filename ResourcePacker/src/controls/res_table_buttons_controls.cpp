@@ -66,7 +66,7 @@ void ResTableButtonsControls::_on_add_file_button_pressed(wxCommandEvent& event)
     std::replace(path_str.begin(), path_str.end(), '\\', '/');
     std::filesystem::path path(path_str);
 
-    file_added_event.emit(path);
+    m_file_added_event.emit(path);
 }
 
 void ResTableButtonsControls::_on_remove_file_button_pressed(wxCommandEvent& event)
