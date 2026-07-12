@@ -53,7 +53,7 @@ void PackFileNameControls::_i_connect_internal_events()
 
 void PackFileNameControls::_i_connect_external_events()
 {
-
+    m_packing_choices_changed_subscription = EventSystem::EventManager::get_instance().subscribe<EventPackingChoicesChanged>(this, &PackFileNameControls::_on_event_packing_choices_changed);
 }
 
 void PackFileNameControls::_i_update_pack_data()
@@ -74,4 +74,33 @@ void PackFileNameControls::_on_file_extention_entered(wxCommandEvent& event)
 {
     m_pack_file_extention_str = event.GetString();
     _i_update_pack_data();
+}
+
+void PackFileNameControls::_on_event_packing_choices_changed(Enums::PackingChoices new_choice)
+{
+    wxString log = "PackFileNameControls::_on_packing_choices_changed: new choice = ";
+
+    switch (new_choice)
+    {
+        case Enums::PackingChoices::PACK_SINGLE_FILE:
+            m_pack_file_name_label->Enable();
+            m_file_name_txt_ctrl->Enable();
+
+            m_file_extention_label->Enable();
+            m_file_extention_txt_ctrl->Enable();
+
+            log.append("PACK_SINGLE_FILE");
+            break;
+        case Enums::PackingChoices::PACK_INDIVIDUAL_FILES:
+            m_pack_file_name_label->Disable();
+            m_file_name_txt_ctrl->Disable();
+        
+            m_file_extention_label->Disable();
+            m_file_extention_txt_ctrl->Disable();
+        
+            log.append("PACK_INDIVIDUAL_FILES");
+            break;
+    }
+
+    wxLogDebug(log);
 }

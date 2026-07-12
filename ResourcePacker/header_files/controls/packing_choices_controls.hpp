@@ -3,6 +3,7 @@
 #include "wx/wx.h"
 #include "icontrol_initializer.hpp"
 #include "enums.hpp"
+#include "custom_events.hpp"
 
 class PackingChoicesControls : public wxPanel, public IControlInitializer
 {
@@ -11,6 +12,10 @@ class PackingChoicesControls : public wxPanel, public IControlInitializer
     public:
         PackingChoicesControls(wxWindow* parent);
     
+    // Custom events
+    private:
+        EventPackingChoicesChanged m_packing_choice_changed_event;
+
     private:
         Enums::PackingChoices m_packing_choice;
 

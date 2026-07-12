@@ -50,6 +50,19 @@ void ResTableButtonsControls::_on_add_directory_button_pressed(wxCommandEvent& e
     wxString log = "ResourceTableButtons::_on_add_directory_button_pressed: Event: string = " + event.GetString();
     wxLogDebug(log);
 
+    wxDirDialog openDirDialog(this, "Add Directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+
+    if (openDirDialog.ShowModal() != wxID_OK)
+    {
+        wxLogDebug("COULD NOT OPEN DIR DIALOG");
+        return;
+    }
+
+    std::string dir_path_str = openDirDialog.GetPath().ToStdString();
+    std::replace(dir_path_str.begin(), dir_path_str.end(), '\\', '/');
+    std::filesystem::path dir_path(dir_path_str);
+
+    m_dir_added_event.emit(dir_path);
 }
 
 void ResTableButtonsControls::_on_add_file_button_pressed(wxCommandEvent& event)

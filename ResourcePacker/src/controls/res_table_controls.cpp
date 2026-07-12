@@ -1,6 +1,7 @@
 #include "controls/res_table_controls.hpp"
 #include "config.hpp"
 #include "packing/pack_manager.hpp"
+#include <string>
 
 ResTableListControls::ResTableListControls(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 {
@@ -81,58 +82,57 @@ void ResTableListControls::_i_connect_internal_events()
 
 void ResTableListControls::_i_connect_external_events()
 {
-    m_file_added_subscription = EventSystem::EventManager::get_instance().subscribe<FileAddedEvent>(this, &ResTableListControls::_on_file_added_event);
+    m_file_added_subscription = EventSystem::EventManager::get_instance().subscribe<EventFileAdded>(this, &ResTableListControls::_on_event_file_added);
+    m_dir_added_subscription = EventSystem::EventManager::get_instance().subscribe<EventDirAdded>(this, &ResTableListControls::_on_event_dir_added);
 }
 
-        // int idx = null_idx;
-        // wxString resource_name;
-        // wxString access_path;
-        // wxString in_path;
-        // wxString out_path;
-        // float in_size = 0;
-        // float out_size = 0;
 
+void ResTableListControls::_on_event_dir_added(std::filesystem::path dir_path)
+{
+    wxString log = wxString::Format("DirAddedEvent recieved: event args = %s", dir_path.string());
+    wxLogDebug(log);
+    m_root_dir_name = wxString(dir_path.filename().string());
+    _add_dir_to_rows(dir_path);
+}
 
-void ResTableListControls::_on_file_added_event(std::filesystem::path path)
+void ResTableListControls::_on_event_file_added(std::filesystem::path path)
 {
     wxString log = wxString::Format("FileAddedEvent recieved: event args = %s", path.string());
     wxLogDebug(log);
+
+    _add_file_to_row(path);
 }
 
-void ResTableListControls::AddFileToRow(std::filesystem::path file_path)
+
+void ResTableListControls::_add_file_to_row(std::filesystem::path file_path)
 {
-    auto _get_out_path = [](std::filesystem::path file_path)
+    ListRow row(m_root_dir_name, file_path);
+    _insert_row_to_list(row);
+}
+
+void ResTableListControls::_insert_row_to_list(ListRow row)
+{
+    row.SetIdx(m_list_ctrl->GetItemCount());
+    m_list_ctrl->InsertItem(row.GetIdx(), row.GetResourceName()); // ColumnIDS::RESOURCE_NAME
+    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::ACCESS_PATH, row.GetAccessPath());
+    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::IN_PATH, row.GetInPath());
+    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::OUT_PATH, row.GetOutPath());
+    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::IN_SIZE, row.GetInSizeStr());
+    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::OUT_SIZE, row.GetOutSizeStr());
+}
+
+void ResTableListControls::_add_dir_to_rows(std::filesystem::path dir_path)
+{
+    std::filesystem::recursive_directory_iterator dir_iter(dir_path);
+
+    for (auto& entry : dir_iter)
     {
-        PackManager& pack_man = PackManager::GetInstance();
-        wxString outpath(pack_man.GetPackData().output_dir_path + "/");
-
-        switch (pack_man.GetPackData().packing_choice)
+        wxString log = wxString("entry: " + entry.path().string());
+        wxLogDebug(log);
+        if (entry.is_regular_file())
         {
-            case Enums::PackingChoices::PACK_SINGLE_FILE:
-                outpath.append(pack_man.GetPackData().pack_file_name);
-                break;
-            case Enums::PackingChoices::PACK_INDIVIDUAL_FILES:
-                outpath.append(file_path.filename().string());
-                break;
+            _add_file_to_row(entry);
         }
-
-        return outpath;
-    };
-
-
-    ListRow row;
-    row.resource_name = wxString(file_path.filename().string());
-    row.access_path = row.resource_name;
-    row.in_path = wxString(file_path.string());
-    row.out_path = _get_out_path(file_path);
-    row.in_size = std::filesystem::file_size(file_path);
-    row.out_size = std::filesystem::file_size(file_path);
-
-    wxLogDebug(row.GetString("Row"));
-}
-
-void ResTableListControls::AddDirToRows(std::filesystem::path dir_path)
-{
-
+    }
 }
 

@@ -52,4 +52,5 @@ void PackingChoicesControls::_on_packing_choices_changed(wxCommandEvent& event)
 {
     m_packing_choice = (Enums::PackingChoices)event.GetInt();
     _i_update_pack_data();
+    m_packing_choice_changed_event.emit(m_packing_choice);
 }

@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(wxWidgets REQUIRED COMPONENTS core base)
 include(${wxWidgets_USE_FILE})
 
+#add_subdirectory(test)
+
 
 add_executable(${PROJECT_NAME} WIN32 
     # App
@@ -23,11 +25,13 @@ add_executable(${PROJECT_NAME} WIN32
     src/controls/res_table_buttons_controls.cpp
     src/controls/res_table_controls.cpp
 
-)
+    src/controls/classes/list_row.cpp
 
+)
 
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} EventSystem)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/header_files)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/common)
+
 

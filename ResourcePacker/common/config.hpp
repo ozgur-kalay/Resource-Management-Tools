@@ -6,8 +6,8 @@ namespace Config
 {
     namespace Sizes
     {
-        const wxSize WINDOW(800, 800);
-        const wxSize RESOURCE_LIST(750, 300);
+        const wxSize WINDOW(1500, 800);
+        const wxSize RESOURCE_LIST(WINDOW.x - 50, WINDOW.y - 300);
     }
 
     namespace Positions
@@ -16,6 +16,5 @@ namespace Config
     }
 
 }
-
 
 #endif // RES_PACKER_CONFIG_HPP
