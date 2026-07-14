@@ -1,63 +1,64 @@
 #ifndef RES_PACKER_PACK_MANAGER_HPP
 #define RES_PACKER_PACK_MANAGER_HPP
+
 #include "enums.hpp"
-#include <vector>
+#include <wx/string.h>
+#include <map>
+#include <string>
+#include "pack_parameters.hpp"
+#include "custom_events.hpp"
+#include <filesystem>
 
 class PackManager
 {
-    struct FileData
-    {
-        wxString in_path;
-        wxString out_path;
-    };
-    struct PackData
-    {
-        Enums::PackingChoices packing_choice;
-        wxString pack_file_name;
-        wxString output_dir_path;
-        Enums::ResAccessPathChoices access_name_choice;
-
-        std::vector<FileData> file_datas;
-    };
-    
-    PackData pack_data;
 public:
-    static PackManager& GetInstance()
-    {
-        static PackManager instance;
-        return instance;
-    }
+    PackManager();
 
-    PackManager(const PackManager&) = delete;
-    PackManager& operator=(const PackManager&) = delete;
-
-    PackData& GetPackData()
-    {
-        return pack_data;
-    }
-
-    void AddPackingChoice(Enums::PackingChoices packing_choice)
-    {
-        this->pack_data.packing_choice = packing_choice;
-    }
-
-    void AddPackFileName(wxString pack_file_name)
-    {
-        this->pack_data.pack_file_name = pack_file_name;
-    }
-
-    void AddOutputDir(wxString output_dir_path)
-    {
-        this->pack_data.output_dir_path = output_dir_path;
-    }
-
-    void AddAccessNameChoice(Enums::ResAccessPathChoices access_name_choice)
-    {
-        this->pack_data.access_name_choice = access_name_choice;
-    }
-
+    static PackParameters& GetPackParams();
 private:
-    PackManager() = default;
+    static PackParameters m_pack_params;
+    wxString m_default_file_extention_str = "pack";
+
+    //wxString GetDefaultFileExtentionStr() const;
+
+// Custom Events Subscriptions
+private:
+    EventSystem::Subscription m_event_sub_packing_choices_changed;
+    EventSystem::Subscription m_event_sub_pack_file_name_added;
+    EventSystem::Subscription m_event_sub_pack_file_extention_added; // NOTE: Must add the default extention if the arg string is empty.
+    EventSystem::Subscription m_event_sub_output_dir_changed;
+    EventSystem::Subscription m_event_sub_access_name_choice_changed;
+    EventSystem::Subscription m_event_sub_res_dir_added;
+    EventSystem::Subscription m_event_sub_res_file_added;
+
+    void _on_event_packing_choice_changed(Enums::PackingChoices packing_choice);
+    void _on_event_pack_file_name_added(wxString& pack_file_name);
+    void _on_event_pack_file_extention_added(wxString& file_extention);
+
+    void _on_event_output_dir_changed(wxString& output_dir_path);
+
+    void _on_event_access_name_choice_changed(Enums::AccessNameChoices access_name_choice);
+    void _on_event_res_dir_added(std::filesystem::path& dir_path);
+    void _on_event_res_file_added(std::filesystem::path& file_path);
+
+// Pack flags
+private:
+
+    uint8_t m_ready_to_pack_flags = 0;
+    
+    const uint8_t ALL_FLAGS_READY = static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILE_NAME) | static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILE_EXTENTION)|static_cast<uint8_t>(Enums::PackReadyFlags::HAS_OUTPUT_DIR)|static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILES_TO_PACK);
+
+    void _add_pack_ready_flag(Enums::PackReadyFlags condition);
+
+// Custom Events
+private:
+    EventPackManagerReadyToPack m_event_pack_ready;
+
+// Custom Event Subscribtions
+private:
+    EventSystem::Subscription m_event_sub_list_table_empty;
+
+    void _on_event_list_table_empty();
 };
 
 #endif // RES_PACKER_PACK_MANAGER_HPP

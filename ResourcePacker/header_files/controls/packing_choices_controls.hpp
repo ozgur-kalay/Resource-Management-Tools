@@ -7,14 +7,12 @@
 
 class PackingChoicesControls : public wxPanel, public IControlInitializer
 {
-
-
     public:
         PackingChoicesControls(wxWindow* parent);
     
     // Custom events
     private:
-        EventPackingChoicesChanged m_packing_choice_changed_event;
+        Event_PackingChoicesChanged m_packing_choice_changed_event;
 
     private:
         Enums::PackingChoices m_packing_choice;

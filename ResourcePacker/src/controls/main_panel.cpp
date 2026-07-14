@@ -3,16 +3,17 @@
 #include "controls/packing_choices_controls.hpp"
 #include "controls/pack_file_name_controls.hpp"
 #include "controls/output_dir_controls.hpp"
-#include "controls/res_access_path_choices_controls.hpp"
+#include "controls/access_name_choices_controls.hpp"
 #include "controls/res_table_buttons_controls.hpp"
 #include "controls/res_table_controls.hpp"
+
 
 MainPanel::MainPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 {
     PackingChoicesControls* packing_choices = new PackingChoicesControls(this);
     PackFileNameControls* pack_file_name = new PackFileNameControls(this);
     OutputDirControls* output_dir = new OutputDirControls(this);
-    ResAccessPathChoicesControls* resource_access = new ResAccessPathChoicesControls(this);
+    AccessNameChoicesControls* resource_access = new AccessNameChoicesControls(this);
     ResTableButtonsControls *res_table_buttons = new ResTableButtonsControls(this);
     ResTableListControls* res_table_list = new ResTableListControls(this);
 
@@ -38,4 +39,5 @@ MainPanel::MainPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
     sizer->Add(res_table_list, 0, wxLEFT, left_margin);
 
     SetSizerAndFit(sizer);
+
 }

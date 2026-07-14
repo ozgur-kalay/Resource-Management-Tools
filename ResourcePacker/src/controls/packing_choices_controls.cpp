@@ -43,8 +43,9 @@ void PackingChoicesControls::_i_connect_external_events()
 
 void PackingChoicesControls::_i_update_pack_data()
 {
-    PackManager::GetInstance().AddPackingChoice(m_packing_choice);
-    wxString log = wxString::Format("Packing Choice updated: choice = %d", PackManager::GetInstance().GetPackData().packing_choice);
+    m_packing_choice_changed_event.emit(m_packing_choice);
+    
+    wxString log = wxString::Format("Packing Choice updated: choice = %d", PackManager::GetPackParams().packing_choice);
     wxLogDebug(log);
 }
 
@@ -52,5 +53,4 @@ void PackingChoicesControls::_on_packing_choices_changed(wxCommandEvent& event)
 {
     m_packing_choice = (Enums::PackingChoices)event.GetInt();
     _i_update_pack_data();
-    m_packing_choice_changed_event.emit(m_packing_choice);
 }

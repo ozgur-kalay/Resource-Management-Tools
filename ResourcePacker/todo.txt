@@ -1,17 +1,20 @@
 TODO:
-    - Implement ResTableListControls::AddDirToRows
+=========================================PRIORITY=================================================
+    - 14/july/26: PRIORITY: Ensure all the signals are emitted and recieved correctly
+==================================================================================================
 
     - Add Toolbar FILE EDIT SETTINGS ETC.
     - Add project/profile feature to be able to save the project for editing for later.
 
     - Implement adding files and dirs to list = NOT DONE
-    - Add removing to the list  = NOT DONE
+    
     - Implement packing = NOT DONE
     - Implement refreshing functions for changes after fields have been entered  = NOT DONE
     - Add documentation to the app it self. A button to press to display the docs, preferably at the top of the app  = NOT DONE
 
 DOING:
     - Complete ResTableListControls::AddFileToRow
+    - Add removing to the list
 
 DONE:
     - Add and bind all events to controls.

@@ -21,12 +21,14 @@ add_executable(${PROJECT_NAME} WIN32
     src/controls/packing_choices_controls.cpp
     src/controls/pack_file_name_controls.cpp
     src/controls/output_dir_controls.cpp
-    src/controls/res_access_path_choices_controls.cpp
+    src/controls/access_name_choices_controls.cpp
     src/controls/res_table_buttons_controls.cpp
     src/controls/res_table_controls.cpp
 
     src/controls/classes/list_row.cpp
 
+    src/packing/pack_manager.cpp
+    src/packing/pack_maker.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} EventSystem)

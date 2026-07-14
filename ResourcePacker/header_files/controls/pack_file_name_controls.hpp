@@ -23,10 +23,13 @@ class PackFileNameControls : public wxPanel, public IControlInitializer
     // Custom Event Subscriptions
     private:
         EventSystem::Subscription m_packing_choices_changed_subscription;
-    
-    // Custom Event Handlers
-    private:
+        
         void _on_event_packing_choices_changed(Enums::PackingChoices new_choice);
+    
+    // Custom Events
+    private:
+        Event_PackFileNameAdded m_event_pack_file_name_added;
+        Event_PackFileExtentionAdded m_event_pack_file_extention_added;
         
     private: 
         void _i_init_controls() override;

@@ -53,15 +53,16 @@ void PackFileNameControls::_i_connect_internal_events()
 
 void PackFileNameControls::_i_connect_external_events()
 {
-    m_packing_choices_changed_subscription = EventSystem::EventManager::get_instance().subscribe<EventPackingChoicesChanged>(this, &PackFileNameControls::_on_event_packing_choices_changed);
+    m_packing_choices_changed_subscription = EventSystem::EventManager::get_instance().subscribe<Event_PackingChoicesChanged>(this, &PackFileNameControls::_on_event_packing_choices_changed);
 }
 
 void PackFileNameControls::_i_update_pack_data()
 {
-    PackManager::GetInstance().AddPackFileName(m_pack_file_name_str + '.' + m_pack_file_extention_str);
+    m_event_pack_file_name_added.emit(m_pack_file_name_str);
+    m_event_pack_file_extention_added.emit(m_pack_file_extention_str);
 
-    wxString log = wxString::Format("Pack file name updated: file name = %s", PackManager::GetInstance().GetPackData().pack_file_name);
-    wxLogDebug(log);
+    // wxString log = wxString::Format("PackFileNameControls::Pack file name changed: file name = %s", m_pack_file_name_str);
+    // wxLogDebug(log);
 }
 
 void PackFileNameControls::_on_file_name_entered(wxCommandEvent& event)
@@ -72,7 +73,10 @@ void PackFileNameControls::_on_file_name_entered(wxCommandEvent& event)
 
 void PackFileNameControls::_on_file_extention_entered(wxCommandEvent& event)
 {
-    m_pack_file_extention_str = event.GetString();
+    wxString _entered_string = event.GetString();
+
+    m_pack_file_extention_str = _entered_string;
+
     _i_update_pack_data();
 }
 
@@ -86,8 +90,8 @@ void PackFileNameControls::_on_event_packing_choices_changed(Enums::PackingChoic
             m_pack_file_name_label->Enable();
             m_file_name_txt_ctrl->Enable();
 
-            m_file_extention_label->Enable();
-            m_file_extention_txt_ctrl->Enable();
+            // m_file_extention_label->Enable();
+            // m_file_extention_txt_ctrl->Enable();
 
             log.append("PACK_SINGLE_FILE");
             break;
@@ -95,8 +99,8 @@ void PackFileNameControls::_on_event_packing_choices_changed(Enums::PackingChoic
             m_pack_file_name_label->Disable();
             m_file_name_txt_ctrl->Disable();
         
-            m_file_extention_label->Disable();
-            m_file_extention_txt_ctrl->Disable();
+            // m_file_extention_label->Disable();
+            // m_file_extention_txt_ctrl->Disable();
         
             log.append("PACK_INDIVIDUAL_FILES");
             break;

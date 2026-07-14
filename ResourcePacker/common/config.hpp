@@ -6,7 +6,7 @@ namespace Config
 {
     namespace Sizes
     {
-        const wxSize WINDOW(1500, 800);
+        const wxSize WINDOW(1000, 800);
         const wxSize RESOURCE_LIST(WINDOW.x - 50, WINDOW.y - 300);
     }
 

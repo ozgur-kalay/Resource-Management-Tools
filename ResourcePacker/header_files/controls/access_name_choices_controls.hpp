@@ -4,14 +4,19 @@
 #include "wx/wx.h"
 #include "icontrol_initializer.hpp"
 #include "enums.hpp"
+#include "custom_events.hpp"
 
-class ResAccessPathChoicesControls : public wxPanel, public IControlInitializer
+class AccessNameChoicesControls : public wxPanel, public IControlInitializer
 {
     public:
-        ResAccessPathChoicesControls(wxWindow* parent);
+        AccessNameChoicesControls(wxWindow* parent);
 
+    // Custom Events
     private:
-        Enums::ResAccessPathChoices m_access_name_choice;
+        Event_AccessNameChoicesChanged m_event_access_name_choice_changed;
+        
+    private:
+        Enums::AccessNameChoices m_access_name_choice;
     
         wxStaticText* m_access_name_choices_label;
         wxChoice* m_access_name_choices_ctrl;

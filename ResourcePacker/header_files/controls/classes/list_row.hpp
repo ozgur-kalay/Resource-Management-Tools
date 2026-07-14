@@ -43,4 +43,5 @@ class ListRow
         wxString _get_out_path(std::filesystem::path file_path);
         wxString _get_access_path(std::filesystem::path file_path);
         wxString _get_root_relative_access_path(wxString root_name, wxString file_path);
+        std::filesystem::path _get_formated_path(std::filesystem::path &path);
 };

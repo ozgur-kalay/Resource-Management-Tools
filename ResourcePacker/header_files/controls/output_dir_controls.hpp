@@ -4,11 +4,16 @@
 #include "wx/wx.h"
 #include "wx/filepicker.h"
 #include "icontrol_initializer.hpp"
+#include "custom_events.hpp"
 
 class OutputDirControls : public wxPanel, public IControlInitializer
 {
     public:
         OutputDirControls(wxWindow* parent);
+    
+    // Custom Events
+    private:
+        Event_OutputDirChanged m_event_output_dir_changed;
 
     private:
         wxStaticText* m_output_dir_label;
@@ -22,6 +27,8 @@ class OutputDirControls : public wxPanel, public IControlInitializer
         void _i_update_pack_data() override;
 
         void _on_dir_picker_changed(wxFileDirPickerEvent& event);
+    // Tests
+    private:
 
 };
 
