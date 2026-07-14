@@ -56,9 +56,9 @@ class ResTableListControls : public wxPanel, public IControlInitializer
         void _i_connect_external_events() override;
     // Custom Events
     private:
-        EventListItemSelected m_list_item_selected_event;
-        EventListItemDESelected m_list_item_DEselected_event;
-        EventListTableEmtpy m_list_table_empty;
+        Event_ListItemSelected m_list_item_selected_event;
+        Event_ListItemDESelected m_list_item_DEselected_event;
+        Event_ListTableEmtpy m_list_table_empty;
     // Custom Events Subscribtions
     private:
         EventSystem::Subscription m_event_sub_dir_added;

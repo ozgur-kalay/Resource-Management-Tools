@@ -25,11 +25,11 @@ class Event_ResDirAdded : public EventSystem::Event<Event_ResDirAdded, std::file
 class Event_ResFileAdded : public EventSystem::Event<Event_ResFileAdded, std::filesystem::path&>{};
 
 
-class EventListItemSelected: public EventSystem::Event<EventListItemSelected, long>{};
+class Event_ListItemSelected: public EventSystem::Event<Event_ListItemSelected, long>{};
 
-class EventListItemDESelected: public EventSystem::Event<EventListItemDESelected, long>{};
+class Event_ListItemDESelected: public EventSystem::Event<Event_ListItemDESelected, long>{};
 
-class EventListTableEmtpy: public EventSystem::Event<EventListTableEmtpy>{};
+class Event_ListTableEmtpy: public EventSystem::Event<Event_ListTableEmtpy>{};
 
 
 class EventRemoveListItemPressed: public EventSystem::Event<EventRemoveListItemPressed, long>{};

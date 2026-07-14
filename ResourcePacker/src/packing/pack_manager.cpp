@@ -19,6 +19,9 @@ PackManager::PackManager()
 void PackManager::_on_event_packing_choice_changed(Enums::PackingChoices packing_choice)
 {
     m_pack_params.packing_choice = packing_choice;
+
+    wxString log = wxString::Format("PackManager::_on_event_packing_choice_changed: packing_choice = %d", packing_choice);
+    wxLogDebug(log);
 }
 
 void PackManager::_on_event_pack_file_name_added(wxString& pack_file_name)
@@ -59,6 +62,9 @@ void PackManager::_on_event_output_dir_changed(wxString& output_dir_path)
 void PackManager::_on_event_access_name_choice_changed(Enums::AccessNameChoices access_name_choice)
 {
     m_pack_params.access_name_choice = access_name_choice;
+
+    wxString log = wxString::Format("PackManager::_on_event_access_name_choice_changed: access_name_choice = %d", access_name_choice);
+    wxLogDebug(log);
 }
 
 void PackManager::_add_pack_ready_flag(Enums::PackReadyFlags condition)

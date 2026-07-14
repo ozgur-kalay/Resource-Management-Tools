@@ -46,8 +46,9 @@ void ResTableButtonsControls::_i_connect_internal_events()
 
 void ResTableButtonsControls::_i_connect_external_events()
 {
-    m_event_sub_list_item_selected = EventSystem::EventManager::get_instance().subscribe<EventListItemSelected>(this, &ResTableButtonsControls::_on_event_list_item_seleced);
-    m_event_sub_list_item_DE_selected = EventSystem::EventManager::get_instance().subscribe<EventListItemDESelected>(this, &ResTableButtonsControls::_on_event_list_item_DE_seleced);
+    m_event_sub_list_item_selected = EventSystem::EventManager::get_instance().subscribe<Event_ListItemSelected>(this, &ResTableButtonsControls::_on_event_list_item_seleced);
+    m_event_sub_list_item_DE_selected = EventSystem::EventManager::get_instance().subscribe<Event_ListItemDESelected>(this, &ResTableButtonsControls::_on_event_list_item_DE_seleced);
+    m_event_sub_list_table_emtpy = EventSystem::EventManager::get_instance().subscribe<Event_ListTableEmtpy>(this, &ResTableButtonsControls::_on_event_list_table_empty);
     m_event_sub_pack_ready = EventSystem::EventManager::get_instance().subscribe<EventPackManagerReadyToPack>(this, &ResTableButtonsControls::_on_event_pack_ready);
 }
 
@@ -74,7 +75,7 @@ void ResTableButtonsControls::_on_add_directory_button_pressed(wxCommandEvent& e
 
     // wxString log = wxString::Format("ResTableButtonsControls::m_event_dir_added_event.emit(dir_path) emitting with = %s", dir_path.string());
     // wxLogDebug(log);
-    
+
     m_event_dir_added_event.emit(dir_path);
 }
 
@@ -124,6 +125,11 @@ void ResTableButtonsControls::_on_event_list_item_DE_seleced(long idx)
     
     m_remove_file_button->Disable();
     m_selected_item_idx = -1;
+}
+
+void ResTableButtonsControls::_on_event_list_table_empty()
+{
+    m_create_pack_button->Disable();
 }
 
 void ResTableButtonsControls::_on_event_pack_ready()

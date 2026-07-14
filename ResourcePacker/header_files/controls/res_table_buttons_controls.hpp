@@ -23,10 +23,12 @@ class ResTableButtonsControls : public wxPanel, public IControlInitializer
 
         EventSystem::Subscription m_event_sub_list_item_selected;
         EventSystem::Subscription m_event_sub_list_item_DE_selected;
+        EventSystem::Subscription m_event_sub_list_table_emtpy;
         EventSystem::Subscription m_event_sub_pack_ready;
 
         void _on_event_list_item_seleced(long idx);
         void _on_event_list_item_DE_seleced(long idx);
+        void _on_event_list_table_empty();
         void _on_event_pack_ready();
 
     private:
