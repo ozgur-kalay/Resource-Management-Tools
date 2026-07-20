@@ -42,14 +42,16 @@ void ResTableButtonsControls::_i_connect_internal_events()
     m_add_dir_button->Bind(wxEVT_BUTTON, &ResTableButtonsControls::_on_add_directory_button_pressed, this);
     m_add_file_button->Bind(wxEVT_BUTTON, &ResTableButtonsControls::_on_add_file_button_pressed, this);
     m_remove_file_button->Bind(wxEVT_BUTTON, &ResTableButtonsControls::_on_remove_file_button_pressed, this);
+    m_create_pack_button->Bind(wxEVT_BUTTON, &ResTableButtonsControls::_on_create_pack_button_pressed, this);
 }
 
 void ResTableButtonsControls::_i_connect_external_events()
 {
-    m_event_sub_list_item_selected = EventSystem::EventManager::get_instance().subscribe<Event_ListItemSelected>(this, &ResTableButtonsControls::_on_event_list_item_seleced);
-    m_event_sub_list_item_DE_selected = EventSystem::EventManager::get_instance().subscribe<Event_ListItemDESelected>(this, &ResTableButtonsControls::_on_event_list_item_DE_seleced);
-    m_event_sub_list_table_emtpy = EventSystem::EventManager::get_instance().subscribe<Event_ListTableEmtpy>(this, &ResTableButtonsControls::_on_event_list_table_empty);
-    m_event_sub_pack_ready = EventSystem::EventManager::get_instance().subscribe<EventPackManagerReadyToPack>(this, &ResTableButtonsControls::_on_event_pack_ready);
+    m_event_sub_list_item_selected = EventSystem::EventManager::get_instance().subscribe<Event_ResTableItemSelected>(this, &ResTableButtonsControls::_on_event_list_item_seleced);
+    m_event_sub_list_item_DE_selected = EventSystem::EventManager::get_instance().subscribe<Event_ResTableItemDESelected>(this, &ResTableButtonsControls::_on_event_list_item_DE_seleced);
+    m_event_sub_list_table_emtpy = EventSystem::EventManager::get_instance().subscribe<Event_ResTableEmtpy>(this, &ResTableButtonsControls::_on_event_list_table_empty);
+    m_event_sub_pack_ready = EventSystem::EventManager::get_instance().subscribe<Event_PackManagerReadyToPack>(this, &ResTableButtonsControls::_on_event_pack_ready);
+    
 }
 
 void ResTableButtonsControls::_on_add_directory_button_pressed(wxCommandEvent& event)
@@ -111,9 +113,13 @@ void ResTableButtonsControls::_on_remove_file_button_pressed(wxCommandEvent& eve
 }
 
 
+void ResTableButtonsControls::_on_create_pack_button_pressed(wxCommandEvent& event)
+{
+    m_event_create_pack.emit();
+}
+
 void ResTableButtonsControls::_on_event_list_item_seleced(long idx)
 {
-    
     m_remove_file_button->Enable();
     m_selected_item_idx = idx;
 }
@@ -135,6 +141,7 @@ void ResTableButtonsControls::_on_event_list_table_empty()
 void ResTableButtonsControls::_on_event_pack_ready()
 {
     m_create_pack_button->Enable();
+    
 }
 
 

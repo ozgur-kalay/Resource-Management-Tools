@@ -17,7 +17,9 @@ class ResTableButtonsControls : public wxPanel, public IControlInitializer
     private:
         Event_ResDirAdded m_event_dir_added_event;
         Event_ResFileAdded m_event_file_added_event;
-        EventRemoveListItemPressed m_event_remove_list_item_pressed;
+        Event_RemoveResTableItemPressed m_event_remove_list_item_pressed;
+
+        Event_CreatePack m_event_create_pack;
 
         long m_selected_item_idx = -1;
 
@@ -46,6 +48,7 @@ class ResTableButtonsControls : public wxPanel, public IControlInitializer
         void _on_add_directory_button_pressed(wxCommandEvent& event);
         void _on_add_file_button_pressed(wxCommandEvent& event);
         void _on_remove_file_button_pressed(wxCommandEvent& event);
+        void _on_create_pack_button_pressed(wxCommandEvent& event);
 
 };
 

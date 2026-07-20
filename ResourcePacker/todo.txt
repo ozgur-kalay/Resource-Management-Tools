@@ -1,21 +1,35 @@
-TODO:
-=========================================PRIORITY=================================================
-    - 14/july/26: PRIORITY: Ensure all the signals are emitted and recieved correctly
-==================================================================================================
+RESOURCE MANAGEMENT TOOLS
+=========================
 
-    - Add Toolbar FILE EDIT SETTINGS ETC.
-    - Add project/profile feature to be able to save the project for editing for later.
+CURRENT
+-------
+✓ Resource pack format designed.
+✓ PackWriter created.
+✓ PackReader created.
+✓ Pack signature written and successfully validated.
 
-    - Implement adding files and dirs to list = NOT DONE
-    
-    - Implement packing = NOT DONE
-    - Implement refreshing functions for changes after fields have been entered  = NOT DONE
-    - Add documentation to the app it self. A button to press to display the docs, preferably at the top of the app  = NOT DONE
+IN PROGRESS
+-----------
+→ Implementing the binary pack format.
+→ Next: Write and read the resource count.
 
-DOING:
-    - Complete ResTableListControls::AddFileToRow
-    - Add removing to the list
+NEXT
+----
+- Write resource count.
+- Write resource table.
+- Write resource data.
+- Read resource count.
+- Read resource table.
+- Read resource data.
+- Verify complete pack integrity.
+- Extract/load resources by access name.
 
-DONE:
-    - Add and bind all events to controls.
-
+LATER
+-----
+- Complete packing implementation.
+- Complete ResTableListControls.
+- Resource removal.
+- Project/Profile save & load.
+- Refresh UI when data changes.
+- In-app documentation.
+- Toolbar (File/Edit/Settings).

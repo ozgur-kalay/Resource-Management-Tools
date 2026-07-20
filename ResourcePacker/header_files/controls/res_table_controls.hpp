@@ -10,16 +10,14 @@
 
 
 #include "custom_events.hpp"
-#include "classes/list_row.hpp"
-
-
+#include "classes/resource_entry.hpp"
 
 
 class ResTableListControls : public wxPanel, public IControlInitializer
 {
     // RESOURCE_NAME, ACCESS_PATH, IN_PATH, OUT_PATH, IN_SIZE, OUT_SIZE
 
-    std::vector<ListRow> m_rows;
+    std::vector<ResourceEntry> m_resource_entries;
 
     public:
         ResTableListControls(wxWindow* parent);
@@ -56,9 +54,9 @@ class ResTableListControls : public wxPanel, public IControlInitializer
         void _i_connect_external_events() override;
     // Custom Events
     private:
-        Event_ListItemSelected m_list_item_selected_event;
-        Event_ListItemDESelected m_list_item_DEselected_event;
-        Event_ListTableEmtpy m_list_table_empty;
+        Event_ResTableItemSelected m_list_item_selected_event;
+        Event_ResTableItemDESelected m_list_item_DEselected_event;
+        Event_ResTableEmtpy m_list_table_empty;
     // Custom Events Subscribtions
     private:
         EventSystem::Subscription m_event_sub_dir_added;
@@ -77,9 +75,7 @@ class ResTableListControls : public wxPanel, public IControlInitializer
     private:
         void _add_dir_to_rows(std::filesystem::path dir_path);
 
-        void _insert_row_to_list(wxString& root_dir_name, std::filesystem::path file_path);
-
-        //void _display_dir_content(std::filesystem::path dir_path);
+        ResourceEntry& _insert_res_entry_to_table(wxString& root_dir_name, std::filesystem::path file_path);
 };
 
 #endif // RES_PACKER_RESOURCE_TABLE_PANEL_HPPf

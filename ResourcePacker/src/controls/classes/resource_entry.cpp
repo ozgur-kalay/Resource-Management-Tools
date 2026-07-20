@@ -1,8 +1,8 @@
-#include "controls/classes/list_row.hpp"
+#include "controls/classes/resource_entry.hpp"
 #include "packing/pack_manager.hpp"
 
 
-ListRow::ListRow(wxString root_dir_name, std::filesystem::path file_path)
+ResourceEntry::ResourceEntry(wxString root_dir_name, std::filesystem::path file_path)
 {
     m_root_dir_name = root_dir_name;
     m_resource_name = file_path.filename().string();
@@ -15,12 +15,12 @@ ListRow::ListRow(wxString root_dir_name, std::filesystem::path file_path)
     m_out_size_str = wxString::Format("%lu bytes", m_out_size);
 }
 
-void ListRow::SetIdx(unsigned int idx)
+void ResourceEntry::SetIdx(unsigned int idx)
 {
     m_idx = idx;
 }
 
-wxString ListRow::_get_access_path(std::filesystem::path file_path)
+wxString ResourceEntry::_get_access_path(std::filesystem::path file_path)
 {
     wxString out;
 
@@ -41,7 +41,7 @@ wxString ListRow::_get_access_path(std::filesystem::path file_path)
     return out;
 }
 
-wxString ListRow::_get_out_path(std::filesystem::path file_path)
+wxString ResourceEntry::_get_out_path(std::filesystem::path file_path)
 {
     wxString outpath(PackManager::GetPackParams().pack_output_dir_path + "/");
 
@@ -62,14 +62,14 @@ wxString ListRow::_get_out_path(std::filesystem::path file_path)
     return outpath;
 }
 
-wxString ListRow::_get_root_relative_access_path(wxString root_name, wxString file_path)
+wxString ResourceEntry::_get_root_relative_access_path(wxString root_name, wxString file_path)
 {
     wxString out = file_path.substr(file_path.find(root_name));
 
     return out;
 }
 
-std::filesystem::path ListRow::_get_formated_path(std::filesystem::path &path)
+std::filesystem::path ResourceEntry::_get_formated_path(std::filesystem::path &path)
 {
     std::string path_str = path.string();
     std::replace(path_str.begin(), path_str.end(), '\\', '/');
@@ -78,7 +78,7 @@ std::filesystem::path ListRow::_get_formated_path(std::filesystem::path &path)
     return out_path;
 }
 
-wxString ListRow::GetString(const wxString& title) const
+wxString ResourceEntry::GetString(const wxString& title) const
 {
     return wxString::Format(
             "ListRow: %s:\n"
@@ -93,13 +93,13 @@ wxString ListRow::GetString(const wxString& title) const
         );
 }
 
-wxString ListRow::GetRootDir() const {return m_root_dir_name;}
-unsigned int ListRow::GetIdx() const {return m_idx; }
-wxString ListRow::GetResourceName() const {return m_resource_name;}
-wxString ListRow::GetAccessPath() const {return m_access_path; }
-wxString ListRow::GetInPath() const {return m_in_path;}
-wxString ListRow::GetOutPath() const {return m_out_path;}
-unsigned long ListRow::GetInSize() const {return m_in_size;}
-wxString ListRow::GetInSizeStr() const {return m_in_size_str;}
-unsigned long ListRow::GetOutSize() const {return m_out_size;}
-wxString ListRow::GetOutSizeStr() const {return m_out_size_str;}
+wxString ResourceEntry::GetRootDir() const {return m_root_dir_name;}
+unsigned int ResourceEntry::GetIdx() const {return m_idx; }
+wxString ResourceEntry::GetResourceName() const {return m_resource_name;}
+wxString ResourceEntry::GetAccessPath() const {return m_access_path; }
+wxString ResourceEntry::GetInPath() const {return m_in_path;}
+wxString ResourceEntry::GetOutPath() const {return m_out_path;}
+unsigned long ResourceEntry::GetInSize() const {return m_in_size;}
+wxString ResourceEntry::GetInSizeStr() const {return m_in_size_str;}
+unsigned long ResourceEntry::GetOutSize() const {return m_out_size;}
+wxString ResourceEntry::GetOutSizeStr() const {return m_out_size_str;}

@@ -1,0 +1,10 @@
+#ifndef RES_PACKING_COMMON_PACK_ENTRY_HPP
+#define RES_PACKING_COMMON_PACK_ENTRY_HPP
+
+class PackEntry
+{
+    
+};
+
+
+#endif // RES_PACKING_COMMON_PACK_ENTRY_HPP

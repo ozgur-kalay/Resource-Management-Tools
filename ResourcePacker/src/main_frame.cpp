@@ -9,6 +9,8 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "Resource Packer")
     SetSize(Config::Sizes::WINDOW);
     CenterOnScreen();
     FromDIP(192);
+    SetClientSize(FromDIP(Config::Sizes::WINDOW));
+    
     
     MainPanel* main_panel = new MainPanel(this);
 

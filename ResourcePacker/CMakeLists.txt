@@ -4,12 +4,21 @@ project(ResourcePacker)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Packages and Libraries
 
+# wxWidgets
 find_package(wxWidgets REQUIRED COMPONENTS core base)
+
+add_library(ResPackingCommon STATIC IMPORTED)
+set_target_properties(ResPackingCommon PROPERTIES
+    IMPORTED_LOCATION "F:/Projects/Cpp/Tools/Resource-Management-Tools/ResPackingCommon/build/Debug/ResPackingCommon.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "F:/Projects/Cpp/Tools/Resource-Management-Tools/ResPackingCommon/inc"
+)
+
 include(${wxWidgets_USE_FILE})
 
-#add_subdirectory(test)
-
+# Event system
+add_subdirectory(third_party/EventSystem)
 
 add_executable(${PROJECT_NAME} WIN32 
     # App
@@ -25,15 +34,13 @@ add_executable(${PROJECT_NAME} WIN32
     src/controls/res_table_buttons_controls.cpp
     src/controls/res_table_controls.cpp
 
-    src/controls/classes/list_row.cpp
+    src/controls/classes/resource_entry.cpp
 
     src/packing/pack_manager.cpp
     src/packing/pack_maker.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} EventSystem)
+target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES} EventSystem ResPackingCommon)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/header_files)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/common)
-
-

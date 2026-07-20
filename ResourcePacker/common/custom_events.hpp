@@ -25,13 +25,14 @@ class Event_ResDirAdded : public EventSystem::Event<Event_ResDirAdded, std::file
 class Event_ResFileAdded : public EventSystem::Event<Event_ResFileAdded, std::filesystem::path&>{};
 
 
-class Event_ListItemSelected: public EventSystem::Event<Event_ListItemSelected, long>{};
+class Event_ResTableItemSelected: public EventSystem::Event<Event_ResTableItemSelected, long>{};
 
-class Event_ListItemDESelected: public EventSystem::Event<Event_ListItemDESelected, long>{};
+class Event_ResTableItemDESelected: public EventSystem::Event<Event_ResTableItemDESelected, long>{};
 
-class Event_ListTableEmtpy: public EventSystem::Event<Event_ListTableEmtpy>{};
+class Event_ResTableEmtpy: public EventSystem::Event<Event_ResTableEmtpy>{};
 
+class Event_RemoveResTableItemPressed: public EventSystem::Event<Event_RemoveResTableItemPressed, long>{};
 
-class EventRemoveListItemPressed: public EventSystem::Event<EventRemoveListItemPressed, long>{};
+class Event_PackManagerReadyToPack: public EventSystem::Event<Event_PackManagerReadyToPack>{};
 
-class EventPackManagerReadyToPack: public EventSystem::Event<EventPackManagerReadyToPack>{};
+class Event_CreatePack: public EventSystem::Event<Event_CreatePack>{};

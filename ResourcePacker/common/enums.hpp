@@ -10,7 +10,7 @@ namespace Enums
     
     enum class PackReadyFlags : uint8_t {
         NONE = 0,
-        HAS_FILE_NAME = 1 << 0, 
+        HAS_FILE_NAME = 1 << 0,
         HAS_FILE_EXTENTION = 1 << 1,
         HAS_OUTPUT_DIR = 1 << 2, 
         HAS_FILES_TO_PACK = 1 << 3

@@ -106,5 +106,5 @@ void PackFileNameControls::_on_event_packing_choices_changed(Enums::PackingChoic
             break;
     }
 
-    wxLogDebug(log);
+    // wxLogDebug(log);
 }

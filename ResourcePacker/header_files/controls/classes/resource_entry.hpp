@@ -3,10 +3,10 @@
 #include "wx/wx.h"
 #include "null_idx.hpp"
 
-class ListRow
+class ResourceEntry
 {
     public:
-        ListRow(wxString root_dir_name, std::filesystem::path file_path);
+        ResourceEntry(wxString root_dir_name, std::filesystem::path file_path);
         wxString GetString(const wxString& title) const;
     
     // Members

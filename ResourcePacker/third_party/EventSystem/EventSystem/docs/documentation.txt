@@ -1,0 +1,261 @@
+EVENT SYSTEM USAGE
+==================
+
+OVERVIEW
+--------
+
+This system allows publishers and subscribers to communicate without knowing
+about each other.
+
+Each event is:
+
+    - Globally accessible.
+    - Strongly typed.
+    - Identified by its C++ class type.
+    - Safe to subscribe to using an automatic Subscription handle.
+
+
+STRICT EVENT RULE
+-----------------
+
+ONE EVENT CLASS MUST REPRESENT ONE UNIQUE EVENT CHANNEL.
+
+Never use the same event class for two different meanings.
+
+Incorrect:
+
+    class DamagedEvent
+        : public EventSystem::Event<DamagedEvent, int>
+    {
+    };
+
+    // Both use the same global channel.
+    class Player { DamagedEvent damaged; };
+    class Enemy  { DamagedEvent damaged; };
+
+Correct:
+
+    class PlayerDamagedEvent
+        : public EventSystem::Event<PlayerDamagedEvent, int>
+    {
+    };
+
+    class EnemyDamagedEvent
+        : public EventSystem::Event<EnemyDamagedEvent, int>
+    {
+    };
+
+
+DEFINING EVENTS
+---------------
+
+The first template argument is always the event class itself.
+
+The remaining arguments define the data carried by the event.
+
+No arguments:
+
+    class GameStartedEvent
+        : public EventSystem::Event<GameStartedEvent>
+    {
+    };
+
+One argument:
+
+    class PlayerDamagedEvent
+        : public EventSystem::Event<PlayerDamagedEvent, int>
+    {
+    };
+
+Multiple arguments:
+
+    class FileAddedEvent
+        : public EventSystem::Event<
+            FileAddedEvent,
+            int,
+            const std::string&
+        >
+    {
+    };
+
+
+PUBLISHING
+----------
+
+The publisher owns the event object and calls emit().
+
+    class Player
+    {
+        public:
+            void take_damage(int damage)
+            {
+                m_damaged_event.emit(damage);
+            }
+
+        private:
+            PlayerDamagedEvent m_damaged_event;
+    };
+
+Arguments must match the event definition:
+
+    m_damaged_event.emit(100);     // Correct
+    m_damaged_event.emit();        // Compile error
+    m_damaged_event.emit("100");   // Compile error
+
+
+SUBSCRIBING
+-----------
+
+IMPORTANT:
+
+ALWAYS STORE THE SUBSCRIPTION RETURNED BY subscribe().
+
+If you do not store it, it is immediately destroyed and the callback is
+immediately disconnected.
+
+
+MEMBER FUNCTION
+---------------
+
+    class HealthBar
+    {
+        public:
+            HealthBar()
+            {
+                m_subscription =
+                    EventSystem::EventManager::get_instance()
+                        .subscribe<PlayerDamagedEvent>(
+                            this,
+                            &HealthBar::on_player_damaged
+                        );
+            }
+
+        private:
+            EventSystem::Subscription m_subscription;
+
+            void on_player_damaged(int damage)
+            {
+                // Handle the event.
+            }
+    };
+
+When HealthBar is destroyed, m_subscription is destroyed and the callback is
+automatically disconnected.
+
+
+FREE OR STATIC FUNCTION
+-----------------------
+
+    void on_game_started()
+    {
+    }
+
+    EventSystem::Subscription subscription =
+        EventSystem::EventManager::get_instance()
+            .subscribe<GameStartedEvent>(&on_game_started);
+
+
+LAMBDA
+------
+
+    EventSystem::Subscription subscription =
+        EventSystem::EventManager::get_instance()
+            .subscribe<PlayerDamagedEvent>(
+                [](int damage)
+                {
+                    // Handle the event.
+                }
+            );
+
+
+MULTIPLE SUBSCRIPTIONS
+----------------------
+
+Store separate handles:
+
+    EventSystem::Subscription m_damage_subscription;
+    EventSystem::Subscription m_death_subscription;
+
+Or store them in a vector:
+
+    std::vector<EventSystem::Subscription> m_subscriptions;
+
+
+MANUAL DISCONNECTION
+--------------------
+
+A subscription disconnects automatically when destroyed.
+
+It can also be disconnected early:
+
+    m_subscription.disconnect();
+
+Check its state with:
+
+    if (m_subscription.is_connected())
+    {
+    }
+
+
+CONSTRUCTION ORDER
+------------------
+
+Publishers and subscribers may be created in any order.
+
+The subscriber does not need to wait for the publisher.
+
+
+IMPORTANT RULES
+---------------
+
+1. ONE EVENT CLASS = ONE UNIQUE GLOBAL EVENT CHANNEL.
+
+2. The first Event template argument must be the event class itself.
+
+3. emit() arguments must match the event definition.
+
+4. Subscriber callback arguments must match the event definition.
+
+5. ALWAYS STORE THE RETURNED Subscription.
+
+6. Destroying the Subscription automatically disconnects the callback.
+
+7. Publishers and subscribers must never directly depend on each other.
+
+
+QUICK EXAMPLE
+-------------
+
+    class FileAddedEvent
+        : public EventSystem::Event<
+            FileAddedEvent,
+            const std::string&
+        >
+    {
+    };
+
+Publisher:
+
+    FileAddedEvent file_added_event;
+    file_added_event.emit("image.png");
+
+Subscriber:
+
+    EventSystem::Subscription subscription =
+        EventSystem::EventManager::get_instance()
+            .subscribe<FileAddedEvent>(
+                [](const std::string& file)
+                {
+                    std::cout << file << '\n';
+                }
+            );
+
+
+FINAL REMINDER
+--------------
+
+ONE EVENT CLASS = ONE UNIQUE EVENT.
+
+ALWAYS STORE THE RETURNED Subscription.
+
+NO STORED Subscription = NO ACTIVE SUBSCRIPTION.

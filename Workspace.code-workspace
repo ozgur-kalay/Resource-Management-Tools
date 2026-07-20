@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "ResourcePacker"
+		},
+		{
+			"path": "PackReader"
+		},
+		{
+			"path": "Test_Reader"
+		},
+		{
+			"path": "AssetsPacked"
+		},
+		{
+			"path": "ResPackingCommon"
+		}
+	]
+}

@@ -12,7 +12,7 @@ OutputDirControls::OutputDirControls(wxWindow* parent) : wxPanel(parent, wxID_AN
 
 void OutputDirControls::_i_init_controls()
 {
-    wxSize _output_dir_ctrl_size(800, 25);
+    wxSize _output_dir_ctrl_size(800, 35);
 
     m_output_dir_label = new wxStaticText(this, wxID_ANY, "Output Directory", wxPoint(), wxDefaultSize);
     m_output_dir_picker_ctrl = new wxDirPickerCtrl(this, wxID_ANY, "Select dir", "Select Directory", wxDefaultPosition, _output_dir_ctrl_size, wxDIRP_USE_TEXTCTRL | wxDIRP_DIR_MUST_EXIST);

@@ -86,7 +86,7 @@ void ResTableListControls::_i_connect_external_events()
 {
     m_event_sub_dir_added = EventSystem::EventManager::get_instance().subscribe<Event_ResDirAdded>(this, &ResTableListControls::_on_event_dir_added);
     m_event_sub_file_added = EventSystem::EventManager::get_instance().subscribe<Event_ResFileAdded>(this, &ResTableListControls::_on_event_file_added);
-    m_event_sub_remove_list_item_pressed = EventSystem::EventManager::get_instance().subscribe<EventRemoveListItemPressed>(this, &ResTableListControls::_on_event_remove_list_item_pressed);
+    m_event_sub_remove_list_item_pressed = EventSystem::EventManager::get_instance().subscribe<Event_RemoveResTableItemPressed>(this, &ResTableListControls::_on_event_remove_list_item_pressed);
 }
 
 void ResTableListControls::_on_access_name_changed(wxCommandEvent& event)
@@ -113,9 +113,8 @@ void ResTableListControls::_on_event_dir_added(std::filesystem::path& dir_path)
     m_root_dir_name.clear();
     m_root_dir_name = wxString(dir_path.filename().string());
     _add_dir_to_rows(dir_path);
-
-    wxString path = wxString::FromUTF8(dir_path.generic_string());
     
+    //wxString path = wxString::FromUTF8(dir_path.generic_string());
     // wxLogDebug("ResTableListControls::DirAddedEvent received: event args = %s", path);
     // wxLogDebug("dir_path.empty() = %d", static_cast<int>(dir_path.empty()));
 }
@@ -124,7 +123,7 @@ void ResTableListControls::_on_event_file_added(std::filesystem::path& path)
 {
     m_root_dir_name.clear();
     m_root_dir_name = wxString(path.parent_path().filename().string());
-    _insert_row_to_list(m_root_dir_name, path);
+    _insert_res_entry_to_table(m_root_dir_name, path);
 
     wxString log = wxString::Format("EventFileAdded recieved: event args = %s", wxString(path.c_str()));
     wxLogDebug(log);
@@ -150,43 +149,36 @@ void ResTableListControls::_on_event_remove_list_item_pressed(long idx)
     }
 }
 
-void ResTableListControls::_insert_row_to_list(wxString& root_dir_name, std::filesystem::path file_path)
-{
-    ListRow row(root_dir_name, file_path);
-
-    row.SetIdx(m_list_ctrl->GetItemCount());
-
-    m_list_ctrl->InsertItem(row.GetIdx(), row.GetAccessPath()); // ColumnIDS::ACCESS_NAME
-    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::RESOURCE_NAME, row.GetResourceName());
-    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::IN_PATH, row.GetInPath());
-    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::OUT_PATH, row.GetOutPath());
-    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::IN_SIZE, row.GetInSizeStr());
-    m_list_ctrl->SetItem(row.GetIdx(), ColumnIDS::OUT_SIZE, row.GetOutSizeStr());
-
-    m_rows.push_back(row);
-
-    //PackManager::GetInstance().AddPackReadyFlags(Enums::PackReadyFlags::HAS_FILES_TO_PACK);
-}
-
 void ResTableListControls::_add_dir_to_rows(std::filesystem::path dir_path)
 {
     std::filesystem::recursive_directory_iterator dir_iter(dir_path);
 
-    for (auto& entry : dir_iter)
+    for (auto& dir_entry : dir_iter)
     {
         // wxString log = wxString("entry: " + entry.path().string());
         // wxLogDebug(log);
 
-        if (entry.is_regular_file())
-        {            
-            _insert_row_to_list(m_root_dir_name, entry);
+        if (dir_entry.is_regular_file())
+        {
+            ResourceEntry res_entry = _insert_res_entry_to_table(m_root_dir_name, dir_entry);
         }
     }
-
-    // for (int i =0; i < m_rows.size(); i++)
-    // {
-    //     auto row = m_rows[i];
-    //     wxLogDebug(row.GetString(wxString::Format("Row: %d", i)));
-    // }
 }
 
+ResourceEntry& ResTableListControls::_insert_res_entry_to_table(wxString& root_dir_name, std::filesystem::path file_path)
+{
+    ResourceEntry res_entry(root_dir_name, file_path);
+
+    res_entry.SetIdx(m_list_ctrl->GetItemCount());
+
+    m_list_ctrl->InsertItem(res_entry.GetIdx(), res_entry.GetAccessPath()); // ColumnIDS::ACCESS_NAME
+    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::RESOURCE_NAME, res_entry.GetResourceName());
+    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::IN_PATH, res_entry.GetInPath());
+    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::OUT_PATH, res_entry.GetOutPath());
+    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::IN_SIZE, res_entry.GetInSizeStr());
+    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::OUT_SIZE, res_entry.GetOutSizeStr());
+
+    m_resource_entries.push_back(res_entry);
+
+    return m_resource_entries.back();
+}

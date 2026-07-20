@@ -5,7 +5,7 @@
 #include <map>
 #include <string>
 
-struct PackParameters
+struct PackingParameters
 {
     Enums::PackingChoices packing_choice;
     wxString pack_file_name;
@@ -14,5 +14,5 @@ struct PackParameters
     Enums::AccessNameChoices access_name_choice;
 
     // {Resource name with extension, access name}
-    std::map<std::string, std::string> access_names_glossery;
+    //std::map<std::string, std::string> access_names_glossery;
 };

@@ -1,0 +1,2 @@
+This project contains the shared files between ResourcePacker and PackReader.
+It defines the classes and formats used by both projects.

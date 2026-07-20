@@ -5,7 +5,7 @@
 #include <wx/string.h>
 #include <map>
 #include <string>
-#include "pack_parameters.hpp"
+#include "packing_parameters.hpp"
 #include "custom_events.hpp"
 #include <filesystem>
 
@@ -14,12 +14,12 @@ class PackManager
 public:
     PackManager();
 
-    static PackParameters& GetPackParams();
-private:
-    static PackParameters m_pack_params;
-    wxString m_default_file_extention_str = "pack";
+    static PackingParameters& GetPackParams();
 
-    //wxString GetDefaultFileExtentionStr() const;
+// Packing Data
+private:
+    static PackingParameters m_pack_params;
+    wxString m_default_file_extention_str = "pack";
 
 // Custom Events Subscriptions
 private:
@@ -30,6 +30,9 @@ private:
     EventSystem::Subscription m_event_sub_access_name_choice_changed;
     EventSystem::Subscription m_event_sub_res_dir_added;
     EventSystem::Subscription m_event_sub_res_file_added;
+    EventSystem::Subscription m_event_sub_res_table_emtpy;
+
+    EventSystem::Subscription m_event_sub_create_pack;
 
     void _on_event_packing_choice_changed(Enums::PackingChoices packing_choice);
     void _on_event_pack_file_name_added(wxString& pack_file_name);
@@ -40,19 +43,26 @@ private:
     void _on_event_access_name_choice_changed(Enums::AccessNameChoices access_name_choice);
     void _on_event_res_dir_added(std::filesystem::path& dir_path);
     void _on_event_res_file_added(std::filesystem::path& file_path);
+    void _on_event_res_table_empty();
+
+    void _on_event_create_pack();
 
 // Pack flags
 private:
 
-    uint8_t m_ready_to_pack_flags = 0;
+    uint8_t m_pack_ready_flags = 0;
     
-    const uint8_t ALL_FLAGS_READY = static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILE_NAME) | static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILE_EXTENTION)|static_cast<uint8_t>(Enums::PackReadyFlags::HAS_OUTPUT_DIR)|static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILES_TO_PACK);
+    const uint8_t SINGLE_FILE_PACKING_READY = static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILE_NAME) | static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILE_EXTENTION)|static_cast<uint8_t>(Enums::PackReadyFlags::HAS_OUTPUT_DIR)|static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILES_TO_PACK);
+    const uint8_t INDIVIDUAL_PACKING_READY = static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILE_EXTENTION) | static_cast<uint8_t>(Enums::PackReadyFlags::HAS_OUTPUT_DIR)|static_cast<uint8_t>(Enums::PackReadyFlags::HAS_FILES_TO_PACK);
 
-    void _add_pack_ready_flag(Enums::PackReadyFlags condition);
+    void _add_pack_ready_flag(Enums::PackReadyFlags flag);
+    void _remove_pack_ready_flag(Enums::PackReadyFlags flag);
 
 // Custom Events
 private:
-    EventPackManagerReadyToPack m_event_pack_ready;
+    Event_PackManagerReadyToPack m_event_pack_ready;
+
+    void _check_and_publish_pack_ready();
 
 // Custom Event Subscribtions
 private:
