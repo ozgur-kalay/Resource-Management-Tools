@@ -84,9 +84,10 @@ void ResTableListControls::_i_connect_internal_events()
 
 void ResTableListControls::_i_connect_external_events()
 {
-    m_event_sub_dir_added = EventSystem::EventManager::get_instance().subscribe<Event_ResDirAdded>(this, &ResTableListControls::_on_event_dir_added);
-    m_event_sub_file_added = EventSystem::EventManager::get_instance().subscribe<Event_ResFileAdded>(this, &ResTableListControls::_on_event_file_added);
-    m_event_sub_remove_list_item_pressed = EventSystem::EventManager::get_instance().subscribe<Event_RemoveResTableItemPressed>(this, &ResTableListControls::_on_event_remove_list_item_pressed);
+    // m_event_sub_resource_dir_added = EventSystem::EventManager::get_instance().subscribe<Event_ResourceDirAdded>(this, &ResTableListControls::_on_event_resource_dir_added);
+    // m_event_sub_single_resource_file_added = EventSystem::EventManager::get_instance().subscribe<Event_SingleResourceFileAdded>(this, &ResTableListControls::_on_event_single_resource_file_added);
+    // m_event_sub_remove_list_item_pressed = EventSystem::EventManager::get_instance().subscribe<Event_RemoveResTableItemPressed>(this, &ResTableListControls::_on_event_remove_list_item_pressed);
+    // m_event_sub_undo_pressed = EventSystem::EventManager::get_instance().subscribe<Event_UndoAddFiles>(this, &ResTableListControls::_on_undo_add_files_pressed);
 }
 
 void ResTableListControls::_on_access_name_changed(wxCommandEvent& event)
@@ -108,77 +109,126 @@ void ResTableListControls::_on_list_item_DEselected(wxListEvent& event)
     m_list_item_DEselected_event.emit(event.GetInt());
 }
 
-void ResTableListControls::_on_event_dir_added(std::filesystem::path& dir_path)
-{
-    m_root_dir_name.clear();
-    m_root_dir_name = wxString(dir_path.filename().string());
-    _add_dir_to_rows(dir_path);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// void ResTableListControls::_on_event_resource_dir_added(std::filesystem::path& dir_path)
+// {
+//     m_root_dir_name.clear();
+//     m_root_dir_name = wxString(dir_path.filename().string());
+//     _add_dir_to_rows(dir_path);
     
-    //wxString path = wxString::FromUTF8(dir_path.generic_string());
-    // wxLogDebug("ResTableListControls::DirAddedEvent received: event args = %s", path);
-    // wxLogDebug("dir_path.empty() = %d", static_cast<int>(dir_path.empty()));
-}
+//     //wxString path = wxString::FromUTF8(dir_path.generic_string());
+//     // wxLogDebug("ResTableListControls::DirAddedEvent received: event args = %s", path);
+//     // wxLogDebug("dir_path.empty() = %d", static_cast<int>(dir_path.empty()));
+// }
 
-void ResTableListControls::_on_event_file_added(std::filesystem::path& path)
-{
-    m_root_dir_name.clear();
-    m_root_dir_name = wxString(path.parent_path().filename().string());
-    _insert_res_entry_to_table(m_root_dir_name, path);
+// void ResTableListControls::_on_event_single_resource_file_added(std::filesystem::path& path)
+// {
+//     m_root_dir_name.clear();
+//     m_root_dir_name = wxString(path.parent_path().filename().string());
+//     ResourceEntry& res_entry = _create_resource_entry(m_root_dir_name, path);
+//     _insert_resource_entry_to_table(res_entry);
 
-    wxString log = wxString::Format("EventFileAdded recieved: event args = %s", wxString(path.c_str()));
-    wxLogDebug(log);
-}
+//     wxString log = wxString::Format("EventFileAdded recieved: event args = %s", wxString(path.c_str()));
+//     wxLogDebug(log);
+// }
 
-void ResTableListControls::_on_event_remove_list_item_pressed(long idx)
-{   
-    wxMessageDialog* _confirm_delete_dialog = new wxMessageDialog(this,
-        "Are you sure you want to remove the item from the list?", "Confirm Delete", wxOK | wxCANCEL
-    );
+// void ResTableListControls::_add_resource_file(std::filesystem::path file_path, bool single_file)
+// {
+//     wxString _root_name_dir;
 
-    _confirm_delete_dialog->SetOKCancelLabels("Remove", "Cancel");
+//     if (single_file)
+//     {
+//         _root_name_dir = wxString(file_path.parent_path().filename().string());
+//     } else{
+//         //_root_name_dir = wxString(dir_path.filename().string());
 
-    if (_confirm_delete_dialog->ShowModal() != wxID_OK)
-    {
-        return;
-    }
+//     }
+// }
 
-    m_list_ctrl->DeleteItem(idx);
-    if (m_list_ctrl->GetItemCount() <= 0)
-    {
-        m_list_table_empty.emit();
-    }
-}
+// void ResTableListControls::_on_event_remove_list_item_pressed(long idx)
+// {   
+//     wxMessageDialog* _confirm_delete_dialog = new wxMessageDialog(this,
+//         "Are you sure you want to remove the item from the list?", "Confirm Delete", wxOK | wxCANCEL
+//     );
 
-void ResTableListControls::_add_dir_to_rows(std::filesystem::path dir_path)
-{
-    std::filesystem::recursive_directory_iterator dir_iter(dir_path);
+//     _confirm_delete_dialog->SetOKCancelLabels("Remove", "Cancel");
 
-    for (auto& dir_entry : dir_iter)
-    {
-        // wxString log = wxString("entry: " + entry.path().string());
-        // wxLogDebug(log);
+//     if (_confirm_delete_dialog->ShowModal() != wxID_OK)
+//     {
+//         return;
+//     }
 
-        if (dir_entry.is_regular_file())
-        {
-            ResourceEntry res_entry = _insert_res_entry_to_table(m_root_dir_name, dir_entry);
-        }
-    }
-}
+//     m_list_ctrl->DeleteItem(idx);
 
-ResourceEntry& ResTableListControls::_insert_res_entry_to_table(wxString& root_dir_name, std::filesystem::path file_path)
-{
-    ResourceEntry res_entry(root_dir_name, file_path);
+//     if (m_list_ctrl->GetItemCount() <= 0)
+//     {
+//         m_list_table_empty.emit();
+//     }
+// }
 
-    res_entry.SetIdx(m_list_ctrl->GetItemCount());
+// void ResTableListControls::_add_dir_to_rows(std::filesystem::path dir_path)
+// {
+//     std::filesystem::recursive_directory_iterator dir_iter(dir_path);
 
-    m_list_ctrl->InsertItem(res_entry.GetIdx(), res_entry.GetAccessPath()); // ColumnIDS::ACCESS_NAME
-    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::RESOURCE_NAME, res_entry.GetResourceName());
-    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::IN_PATH, res_entry.GetInPath());
-    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::OUT_PATH, res_entry.GetOutPath());
-    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::IN_SIZE, res_entry.GetInSizeStr());
-    m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::OUT_SIZE, res_entry.GetOutSizeStr());
+//     for (auto& dir_entry : dir_iter)
+//     {
+//         if (dir_entry.is_regular_file())
+//         {
+//             ResourceEntry& res_entry = _create_resource_entry(m_root_dir_name, dir_entry);
+//             _insert_resource_entry_to_table(res_entry);
+//         }
+//     }
+// }
 
-    m_resource_entries.push_back(res_entry);
+// ResourceEntry& ResTableListControls::_create_resource_entry(wxString& root_dir_name, std::filesystem::path file_path)
+// {
+//     ResourceEntry res_entry(root_dir_name, file_path);
+//     res_entry.SetIdx(m_list_ctrl->GetItemCount());
+//     m_resource_entries.push_back(res_entry);
+//     return m_resource_entries.back();
+// }
 
-    return m_resource_entries.back();
-}
+
+// void ResTableListControls::_insert_resource_entry_to_table(ResourceEntry& res_entry)
+// {
+//     m_list_ctrl->InsertItem(res_entry.GetIdx(), res_entry.GetAccessPath()); // ColumnIDS::ACCESS_NAME
+//     m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::RESOURCE_NAME, res_entry.GetResourceName());
+//     m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::IN_PATH, res_entry.GetInPath());
+//     m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::OUT_PATH, res_entry.GetOutPath());
+//     m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::IN_SIZE, res_entry.GetInSizeStr());
+//     m_list_ctrl->SetItem(res_entry.GetIdx(), ColumnIDS::OUT_SIZE, res_entry.GetOutSizeStr());   
+// }
+
+
+// void ResTableListControls::_on_undo_add_files_pressed()
+// {
+//     wxLogDebug("ResTableListControls recieved UNDO BUTOTN PRESED");
+// }
+

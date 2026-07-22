@@ -10,14 +10,14 @@
 
 
 #include "custom_events.hpp"
-#include "classes/resource_entry.hpp"
+
 
 
 class ResTableListControls : public wxPanel, public IControlInitializer
 {
     // RESOURCE_NAME, ACCESS_PATH, IN_PATH, OUT_PATH, IN_SIZE, OUT_SIZE
 
-    std::vector<ResourceEntry> m_resource_entries;
+    // std::vector<ResourceEntry> m_resource_entries;
 
     public:
         ResTableListControls(wxWindow* parent);
@@ -56,26 +56,34 @@ class ResTableListControls : public wxPanel, public IControlInitializer
     private:
         Event_ResTableItemSelected m_list_item_selected_event;
         Event_ResTableItemDESelected m_list_item_DEselected_event;
-        Event_ResTableEmtpy m_list_table_empty;
-    // Custom Events Subscribtions
-    private:
-        EventSystem::Subscription m_event_sub_dir_added;
-        EventSystem::Subscription m_event_sub_file_added;
-        EventSystem::Subscription m_event_sub_remove_list_item_pressed;
-        
-        void _on_event_dir_added(std::filesystem::path& dir_path);
-        void _on_event_file_added(std::filesystem::path& file_path);
-        void _on_event_remove_list_item_pressed(long idx);
+        // Event_ResTableEmtpy m_list_table_empty;
+
     // Wx Events handling
     private:
         void _on_list_item_selected(wxListEvent& event);
         void _on_list_item_DEselected(wxListEvent& event);
         void _on_access_name_changed(wxCommandEvent& event);
+
+    // Custom Events Subscribtions
+    private:
+        // EventSystem::Subscription m_event_sub_resource_dir_added;
+        // EventSystem::Subscription m_event_sub_single_resource_file_added;
+        // EventSystem::Subscription m_event_sub_remove_list_item_pressed;
+        // EventSystem::Subscription m_event_sub_undo_pressed;
+        
+        // void _on_event_resource_dir_added(std::filesystem::path& dir_path);
+        // void _on_event_single_resource_file_added(std::filesystem::path& file_path);
+        // void _on_event_remove_list_item_pressed(long idx);
+        // void _on_undo_add_files_pressed();
+
+
     // Helpers
     private:
-        void _add_dir_to_rows(std::filesystem::path dir_path);
+        // void _add_dir_to_rows(std::filesystem::path dir_path);
+        // ResourceEntry& _create_resource_entry(wxString& root_dir_name, std::filesystem::path file_path);
+        // void _insert_resource_entry_to_table(ResourceEntry& res_entry);
 
-        ResourceEntry& _insert_res_entry_to_table(wxString& root_dir_name, std::filesystem::path file_path);
+        // void _add_resource_file(std::filesystem::path file_path, bool single = false);
 };
 
 #endif // RES_PACKER_RESOURCE_TABLE_PANEL_HPPf

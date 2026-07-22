@@ -1,10 +1,12 @@
 #include "packing/pack_manager.hpp"
 #include "wx/wx.h"
 #include "packing/pack_maker.hpp"
+#include "packing/resource_file_entry.hpp"
 
 PackingParameters PackManager::m_pack_params;
+PackingData PackManager::m_packing_data;
 
-PackingParameters& PackManager::GetPackParams(){return m_pack_params;}
+const PackingParameters& PackManager::GetPackParams(){return m_pack_params;}
 
 PackManager::PackManager()
 {
@@ -13,11 +15,11 @@ PackManager::PackManager()
     m_event_sub_pack_file_extention_added = EventSystem::EventManager::get_instance().subscribe<Event_PackFileExtentionAdded>(this, &PackManager::_on_event_pack_file_extention_added); // NOTE: Must add the default extention if the arg string is empty.
     m_event_sub_output_dir_changed = EventSystem::EventManager::get_instance().subscribe<Event_OutputDirChanged>(this, &PackManager::_on_event_output_dir_changed);
     m_event_sub_access_name_choice_changed = EventSystem::EventManager::get_instance().subscribe<Event_AccessNameChoicesChanged>(this, &PackManager::_on_event_access_name_choice_changed);
-    m_event_sub_res_dir_added = EventSystem::EventManager::get_instance().subscribe<Event_ResDirAdded>(this, &PackManager::_on_event_res_dir_added);
-    m_event_sub_res_file_added = EventSystem::EventManager::get_instance().subscribe<Event_ResFileAdded>(this, &PackManager::_on_event_res_file_added);
-    m_event_sub_res_table_emtpy = EventSystem::EventManager::get_instance().subscribe<Event_ResTableEmtpy>(this, &PackManager::_on_event_res_table_empty);
+    m_event_sub_resource_dir_added = EventSystem::EventManager::get_instance().subscribe<Event_ResourceDirAdded>(this, &PackManager::_on_event_res_dir_added);
+    m_event_sub_single_resource_file_added = EventSystem::EventManager::get_instance().subscribe<Event_SingleResourceFileAdded>(this, &PackManager::_on_event_res_file_added);
+    // m_event_sub_res_table_emtpy = EventSystem::EventManager::get_instance().subscribe<Event_ResTableEmtpy>(this, &PackManager::_on_event_res_table_empty);
 
-    m_event_sub_create_pack = EventSystem::EventManager::get_instance().subscribe<Event_CreatePack>(this, &PackManager::_on_event_create_pack);
+    m_event_sub_create_pack_pressed = EventSystem::EventManager::get_instance().subscribe<Event_CreatePackPressed>(this, &PackManager::_on_event_create_pack);
 
     wxLogDebug("PackManager::SINGLE_FILE_PACKING_READY = %d", static_cast<int>(SINGLE_FILE_PACKING_READY));
     wxLogDebug("PackManager::INDIVIDUAL_PACKING_READY = %d", static_cast<int>(INDIVIDUAL_PACKING_READY));
@@ -102,6 +104,47 @@ void PackManager::_on_event_access_name_choice_changed(Enums::AccessNameChoices 
     // wxLogDebug(log);
 }
 
+
+void PackManager::_on_event_res_dir_added(std::filesystem::path& dir_path)
+{
+    _add_pack_ready_flag(Enums::PackReadyFlags::HAS_FILES_TO_PACK);
+    
+    std::filesystem::recursive_directory_iterator dir_iter(dir_path);
+
+    std::string root = dir_path.filename().string();
+
+    for (auto& entry : dir_iter)
+    {
+        if (entry.is_regular_file())
+        {
+            _add_file(entry.path(), root);
+        }
+    }
+    
+    // wxString log = wxString::Format("PackManager::_on_event_res_dir_added:: dir path = %s", dir_path.string());
+    //  wxLogDebug(log);
+}
+
+
+
+void PackManager::_on_event_res_file_added(std::filesystem::path& file_path)
+{
+    _add_pack_ready_flag(Enums::PackReadyFlags::HAS_FILES_TO_PACK);
+}
+
+
+void PackManager::_add_file(std::filesystem::path file_path, wxString root_name)
+{
+    ResourceFileEntry file_entry(root_name, file_path, &m_pack_params);
+    m_packing_data.resource_file_entries.push_back(file_entry);
+    
+    // ResourceFileEntry file_entry(root_name, file_path);
+    // m_packing_data.resource_file_entries.push_back(file_entry);
+
+    //wxLogDebug("PackManager::_add_file: file entry = %s", file_entry.GetInPath());
+}
+
+
 void PackManager::_add_pack_ready_flag(Enums::PackReadyFlags flag)
 {
     m_pack_ready_flags |= static_cast<uint8_t>(flag);
@@ -131,18 +174,6 @@ void PackManager::_check_and_publish_pack_ready()
     }
 }
 
-void PackManager::_on_event_res_dir_added(std::filesystem::path& dir_path)
-{
-    _add_pack_ready_flag(Enums::PackReadyFlags::HAS_FILES_TO_PACK);
-
-    // wxString log = wxString::Format("PackManager::_on_event_res_dir_added:: dir path = %s", dir_path.string());
-    // wxLogDebug(log);
-}
-
-void PackManager::_on_event_res_file_added(std::filesystem::path& file_path)
-{
-    _add_pack_ready_flag(Enums::PackReadyFlags::HAS_FILES_TO_PACK);
-}
 
 void PackManager::_on_event_res_table_empty()
 {
@@ -156,7 +187,7 @@ void PackManager::_on_event_create_pack()
 {
     wxLogDebug("PackManager::_on_event_create_pack recieved");
     
-    PackMaker pack_maker;
+    PackMaker pack_maker(m_pack_params, m_packing_data);
     
-    pack_maker.pack(m_pack_params);
+    pack_maker.pack();
 }

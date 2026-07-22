@@ -2,7 +2,6 @@
 #include <string>
 
 #define SIGNATURE "OZGRPACK"
-#define SIGNATURE_LENGTH 8
 
 class ResPackSignature
 {

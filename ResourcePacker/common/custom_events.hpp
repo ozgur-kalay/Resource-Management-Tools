@@ -21,18 +21,19 @@ class Event_PackingChoicesChanged : public EventSystem::Event<Event_PackingChoic
 class Event_AccessNameChoicesChanged: public EventSystem::Event<Event_AccessNameChoicesChanged, Enums::AccessNameChoices>{};
 
 // Resource added events
-class Event_ResDirAdded : public EventSystem::Event<Event_ResDirAdded, std::filesystem::path&>{};
-class Event_ResFileAdded : public EventSystem::Event<Event_ResFileAdded, std::filesystem::path&>{};
+class Event_ResourceDirAdded : public EventSystem::Event<Event_ResourceDirAdded, std::filesystem::path&>{};
+class Event_SingleResourceFileAdded : public EventSystem::Event<Event_SingleResourceFileAdded, std::filesystem::path&>{};
 
+class Event_UndoAddFiles : public EventSystem::Event<Event_UndoAddFiles>{};
 
 class Event_ResTableItemSelected: public EventSystem::Event<Event_ResTableItemSelected, long>{};
 
 class Event_ResTableItemDESelected: public EventSystem::Event<Event_ResTableItemDESelected, long>{};
 
-class Event_ResTableEmtpy: public EventSystem::Event<Event_ResTableEmtpy>{};
+//class Event_ResTableEmtpy: public EventSystem::Event<Event_ResTableEmtpy>{};
 
 class Event_RemoveResTableItemPressed: public EventSystem::Event<Event_RemoveResTableItemPressed, long>{};
 
 class Event_PackManagerReadyToPack: public EventSystem::Event<Event_PackManagerReadyToPack>{};
 
-class Event_CreatePack: public EventSystem::Event<Event_CreatePack>{};
+class Event_CreatePackPressed: public EventSystem::Event<Event_CreatePackPressed>{};

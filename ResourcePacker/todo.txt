@@ -10,6 +10,10 @@ CURRENT
 
 IN PROGRESS
 -----------
+→ !!PRIORITY!! Implementing ResourceFileEntry. File writing works.
+→ implement access names properly.
+
+
 → Implementing the binary pack format.
 → Next: Write and read the resource count.
 

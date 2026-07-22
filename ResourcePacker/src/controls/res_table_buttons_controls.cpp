@@ -18,6 +18,9 @@ void ResTableButtonsControls::_i_init_controls()
     m_remove_file_button = new wxButton(this, wxID_ANY, "Remove File");
     m_remove_file_button->Disable();
 
+    m_undo_add_items_button = new wxButton(this, wxID_ANY, "Undo");
+    m_undo_add_items_button->Disable();
+
     m_create_pack_button = new wxButton(this, wxID_ANY, "Create Pack");
     m_create_pack_button->Disable();
 
@@ -31,7 +34,9 @@ void ResTableButtonsControls::_i_init_controls()
     sizer->Add(m_add_file_button);
     sizer->AddSpacer(h_margin);
     sizer->Add(m_remove_file_button);
-    sizer->AddSpacer(h_margin * 10);
+    sizer->AddSpacer(h_margin);
+    sizer->Add(m_undo_add_items_button);
+    sizer->AddSpacer(h_margin);
     sizer->Add(m_create_pack_button);
 
     SetSizer(sizer);
@@ -43,13 +48,14 @@ void ResTableButtonsControls::_i_connect_internal_events()
     m_add_file_button->Bind(wxEVT_BUTTON, &ResTableButtonsControls::_on_add_file_button_pressed, this);
     m_remove_file_button->Bind(wxEVT_BUTTON, &ResTableButtonsControls::_on_remove_file_button_pressed, this);
     m_create_pack_button->Bind(wxEVT_BUTTON, &ResTableButtonsControls::_on_create_pack_button_pressed, this);
+    m_undo_add_items_button->Bind(wxEVT_BUTTON, &ResTableButtonsControls::_on_undo_button_pressed, this);
 }
 
 void ResTableButtonsControls::_i_connect_external_events()
 {
     m_event_sub_list_item_selected = EventSystem::EventManager::get_instance().subscribe<Event_ResTableItemSelected>(this, &ResTableButtonsControls::_on_event_list_item_seleced);
     m_event_sub_list_item_DE_selected = EventSystem::EventManager::get_instance().subscribe<Event_ResTableItemDESelected>(this, &ResTableButtonsControls::_on_event_list_item_DE_seleced);
-    m_event_sub_list_table_emtpy = EventSystem::EventManager::get_instance().subscribe<Event_ResTableEmtpy>(this, &ResTableButtonsControls::_on_event_list_table_empty);
+    //m_event_sub_list_table_emtpy = EventSystem::EventManager::get_instance().subscribe<Event_ResTableEmtpy>(this, &ResTableButtonsControls::_on_event_list_table_empty);
     m_event_sub_pack_ready = EventSystem::EventManager::get_instance().subscribe<Event_PackManagerReadyToPack>(this, &ResTableButtonsControls::_on_event_pack_ready);
     
 }
@@ -102,7 +108,7 @@ void ResTableButtonsControls::_on_add_file_button_pressed(wxCommandEvent& event)
     std::replace(path_str.begin(), path_str.end(), '\\', '/');
     std::filesystem::path path(path_str);
 
-    m_event_file_added_event.emit(path);
+    m_event_single_resource_file_added_event.emit(path);
 }
 
 void ResTableButtonsControls::_on_remove_file_button_pressed(wxCommandEvent& event)
@@ -115,7 +121,7 @@ void ResTableButtonsControls::_on_remove_file_button_pressed(wxCommandEvent& eve
 
 void ResTableButtonsControls::_on_create_pack_button_pressed(wxCommandEvent& event)
 {
-    m_event_create_pack.emit();
+    m_event_create_pack_pressed.emit();
 }
 
 void ResTableButtonsControls::_on_event_list_item_seleced(long idx)
@@ -140,8 +146,10 @@ void ResTableButtonsControls::_on_event_list_table_empty()
 
 void ResTableButtonsControls::_on_event_pack_ready()
 {
-    m_create_pack_button->Enable();
-    
+    m_create_pack_button->Enable();    
 }
 
-
+void ResTableButtonsControls::_on_undo_button_pressed(wxCommandEvent& event)
+{
+    m_event_undo_pressed.emit();
+}

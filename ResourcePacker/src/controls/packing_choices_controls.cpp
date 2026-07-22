@@ -16,7 +16,7 @@ void PackingChoicesControls::_i_init_controls()
 
     m_packing_choice = Enums::PackingChoices::PACK_SINGLE_FILE;
 
-    m_packing_choices_label = new wxStaticText(this, wxID_ANY, "Packing options");
+    m_packing_choices_label = new wxStaticText(this, wxID_ANY, "Packing Choices");
 
     m_packing_choices_ctrl = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_packing_choices_array);
     m_packing_choices_ctrl->Select((int)m_packing_choice);
@@ -44,9 +44,6 @@ void PackingChoicesControls::_i_connect_external_events()
 void PackingChoicesControls::_i_update_pack_data()
 {
     m_packing_choice_changed_event.emit(m_packing_choice);
-    
-    wxString log = wxString::Format("Packing Choice updated: choice = %d", PackManager::GetPackParams().packing_choice);
-    wxLogDebug(log);
 }
 
 void PackingChoicesControls::_on_packing_choices_changed(wxCommandEvent& event)
